@@ -1,36 +1,41 @@
-<?php
-
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index() {
-        return response()->json(['action' => 'index - list users']);
+    public function index()
+    {
+        // نمایش همه کاربران
+        return response()->json(User::all());
     }
 
-    public function create() {
-        return response()->json(['action' => 'create - show form']);
+    public function store(Request $request)
+    {
+        // ساخت کاربر جدید
+        $user = User::create($request->all());
+        return response()->json($user, 201);
     }
 
-    public function store(Request $request) {
-        return response()->json(['action' => 'store - save user']);
+    public function show($id)
+    {
+        // نمایش یک کاربر خاص
+        return response()->json(User::findOrFail($id));
     }
 
-    public function show($id) {
-        return response()->json(['action' => "show - user {$id}"]);
+    public function update(Request $request, $id)
+    {
+        // ویرایش کاربر
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+        return response()->json($user);
     }
 
-    public function edit($id) {
-        return response()->json(['action' => "edit - show edit form for user {$id}"]);
-    }
-
-    public function update(Request $request, $id) {
-        return response()->json(['action' => "update - update user {$id}"]);
-    }
-
-    public function destroy($id) {
-        return response()->json(['action' => "destroy - delete user {$id}"]);
+    public function destroy($id)
+    {
+        // حذف کاربر
+        User::findOrFail($id)->delete();
+        return response()->json(['message' => 'User deleted successfully']);
     }
 }
